@@ -4,7 +4,7 @@ lint:
 	flake8
 	mypy --check-untyped-defs tsp_client
 
-test: lint
+test:
 	python ./test/test.py -v
 
 init_docs:

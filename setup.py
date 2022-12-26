@@ -14,7 +14,7 @@ setup(
         "write_to": "tsp_client/version.py",
     },
     setup_requires=["setuptools_scm >= 3.4.3"],
-    install_requires=["asn1crypto >= 0.24.0", "urllib3 >= 1.22"],
+    install_requires=["asn1crypto >= 0.24.0", "requests >= 2.18.4", "pyOpenSSL >= 17.5.0"],
     extras_require={
         "tests": [
             "flake8",
