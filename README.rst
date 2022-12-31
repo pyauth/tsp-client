@@ -58,6 +58,10 @@ provides a relatively high throughput public TSA endpoint, but your SHA-512 mess
 unencrypted over your network. As an alternative, Sectigo offers an HTTPS TSA (``https://timestamp.sectigo.com``) but
 applies throttling so is only suitable for low throughput applications.
 
+The European Union maintains a list of trusted TSAs as part of the `eIDAS dashboard
+<https://esignature.ec.europa.eu/efda/tl-browser/>`_, however this list only serves as a root of trust and does not link
+directly to the TSA endpoints of listed providers.
+
 Authors
 -------
 * Andrey Kislyuk
