@@ -1,3 +1,8 @@
+Changes for v0.1.1 (2022-12-31)
+===============================
+
+-  Begin documentation; allow parsing of v1 structs
+
 Changes for v0.1.0 (2022-12-30)
 ===============================
 
