@@ -1,0 +1,5 @@
+tsp-client is a free open source implementation of the RFC 3161 TSP standard. The tsp-client project is staffed by
+volunteers. If you are using this library in a for-profit project, please contribute to tsp-client development and
+maintenance using the "Sponsor" button on the tsp-client GitHub project page, https://github.com/pyauth/tsp-client. If
+you are looking for support with your commercial electronic signature based application, please donate and contact
+tsp-client developers using the issue tracker on the project page or the contact information listed in README.rst.
