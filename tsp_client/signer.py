@@ -2,7 +2,7 @@ import secrets
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
-from typing import Callable, Optional
+from typing import Callable, FrozenSet, Optional
 
 import requests
 from asn1crypto import algos, tsp

@@ -2,6 +2,10 @@ tsp-client: An IETF Time-Stamp Protocol (TSP) (RFC 3161) client
 ===============================================================
 tsp-client is an implementation of the `RFC 3161 <https://www.rfc-editor.org/rfc/rfc3161.html>`_ TSP protocol in Python.
 
+TSP is used for point-in-time attestation and non-repudiation as part of various electronic signature and code signing
+schemes, including `eIDAS <https://en.wikipedia.org/wiki/EIDAS>`_ `XAdES <https://en.wikipedia.org/wiki/XAdES>`_
+(tsp-client is used by `SignXML <https://github.com/XML-Security/signxml>`_ to implement XAdES).
+
 Installation
 ------------
 ::
@@ -34,17 +38,25 @@ Synopsis
 
 Specifying a custom TSA
 ~~~~~~~~~~~~~~~~~~~~~~~
+To provide a timestamped signature with non-repudiation bound by a chain of trust, TSP requires the use of a TSA
+(time-stamp authority) server when generating timestamp tokens. TSA servers can be thought of as digital notaries.
+Verification of tokens can be done offline using your system's certificate authority (CA) trust store.
+
 By default, tsp-client uses the `DigiCert TSA server
-<https://knowledge.digicert.com/generalinformation/INFO4231.html>`_. To use a different TSA, set the
+<https://knowledge.digicert.com/generalinformation/INFO4231.html>`_ when signing tokens. To use a different TSA, set the
 ``SigningSettings.tsp_server`` attribute as follows:
 
 .. code-block:: python
 
     from tsp_client import TSPSigner, TSPVerifier, SigningSettings
-    signing_settings = SigningSettings(tsp_server="http://tsa.quovadisglobal.com/TSS/HttpTspServer")
+    signing_settings = SigningSettings(tsp_server="http://timestamp.identrust.com")
     signer = TSPSigner()
     signed = signer.sign(message, signing_settings=signing_settings)
 
+There is currently no credible public TSA that offers HTTPS transport security and does not apply throttling. DigiCert
+provides a relatively high throughput public TSA endpoint, but your SHA-512 message digests will be transmitted
+unencrypted over your network. As an alternative, Sectigo offers an HTTPS TSA (``https://timestamp.sectigo.com``) but
+applies throttling so is only suitable for low throughput applications.
 
 Authors
 -------

@@ -29,12 +29,12 @@ is acceptable for the application.
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, Union
 
 import certifi
 from asn1crypto.cms import CMSAttribute, ContentInfo
 from asn1crypto.core import Sequence, SetOf
-from asn1crypto.tsp import ESSCertIDv2, SigningCertificateV2
+from asn1crypto.tsp import ESSCertID, ESSCertIDv2, SigningCertificate, SigningCertificateV2
 from asn1crypto.x509 import Certificate
 from OpenSSL.crypto import FILETYPE_ASN1, X509Store, X509StoreContext, load_certificate
 from OpenSSL.crypto import verify as openssl_verify
@@ -51,9 +51,14 @@ class VerifyResult:
     signed_attrs: Sequence
 
 
+class CMSAttributes(SetOf):
+    _child_spec = CMSAttribute
+
+
 class TSPVerifier:
     ca_pem_file = None
     ca_path = None
+    require_ess_cert_id_v2 = False
 
     def _verify_imprint(self, message_imprint, *, expect_message, expect_message_digest):
         hash_alg = DigestAlgorithm(message_imprint["hash_algorithm"]["algorithm"])
@@ -68,6 +73,10 @@ class TSPVerifier:
         for signed_attr in signer_info["signed_attrs"]:
             for signed_attr_value in signed_attr["values"]:
                 if isinstance(signed_attr_value, SigningCertificateV2):
+                    for cert_id in signed_attr_value["certs"]:
+                        return cert_id
+            for signed_attr_value in signed_attr["values"]:
+                if isinstance(signed_attr_value, SigningCertificate):
                     for cert_id in signed_attr_value["certs"]:
                         return cert_id
         raise InvalidTimeStampToken("Unable to extract signing certificate ID")
@@ -88,12 +97,21 @@ class TSPVerifier:
         store.load_locations(cafile=ca_pem_file, capath=ca_path)
         return store
 
+    def _cert_match(self, *, signing_cert_id: Union[ESSCertID, ESSCertIDv2], x509_cert) -> bool:
+        if isinstance(signing_cert_id, ESSCertIDv2) and x509_cert.sha256 == signing_cert_id["cert_hash"].native:
+            return True
+        if self.require_ess_cert_id_v2:
+            return False
+        if isinstance(signing_cert_id, ESSCertID) and x509_cert.sha1 == signing_cert_id["cert_hash"].native:
+            return True
+        return False
+
     def _extract_signing_cert(self, signer_info, *, certificates):
         signing_cert_id = self._get_signing_cert_id(signer_info)
         tsa_cert, tsa_chain = None, []
         for cert in certificates:
             logger.debug("%s=>%s", cert.issuer.native["common_name"], cert.subject.native["common_name"])
-            if cert.sha256 == signing_cert_id["cert_hash"].native:
+            if self._cert_match(signing_cert_id=signing_cert_id, x509_cert=cert):
                 self._validate_tsa_cert(cert)
                 tsa_cert = load_certificate(type=FILETYPE_ASN1, buffer=cert.dump())
             else:
@@ -119,10 +137,6 @@ class TSPVerifier:
             raise DigestMismatchError(f"Expected timestamp content digest {expect_tst_digest}, but got {digest}")
 
     def _verify_signature(self, *, signing_cert, signer_info):
-        # string_to_sign = bytes(tst_content)  # + signer_info["signed_attrs"].dump()
-        class CMSAttributes(SetOf):
-            _child_spec = CMSAttribute
-
         signed_attrs = CMSAttributes(signer_info["signed_attrs"])
         string_to_sign = signed_attrs.dump()
         digest_algorithm = signer_info["digest_algorithm"]["algorithm"].native
