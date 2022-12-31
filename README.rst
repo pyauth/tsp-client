@@ -38,7 +38,7 @@ Synopsis
 
 Specifying a custom TSA
 ~~~~~~~~~~~~~~~~~~~~~~~
-To provide a timestamped signature with non-repudiation bound by a chain of trust, TSP requires the use of a TSA
+To provide a timestamped signature with non-repudiation verifiable via a chain of trust, TSP requires the use of a TSA
 (time-stamp authority) server when generating timestamp tokens. TSA servers can be thought of as digital notaries.
 Verification of tokens can be done offline using your system's certificate authority (CA) trust store.
 
