@@ -54,8 +54,8 @@ By default, tsp-client uses the `DigiCert TSA server
     signed = signer.sign(message, signing_settings=signing_settings)
 
 There is currently no credible public TSA that offers HTTPS transport security and does not apply throttling. DigiCert
-provides a relatively high throughput public TSA endpoint, but your SHA-512 message digests will be transmitted
-unencrypted over your network. As an alternative, Sectigo offers an HTTPS TSA (``https://timestamp.sectigo.com``) but
+provides a relatively high throughput public TSA endpoint, but your message digests and tokens will be transmitted
+unencrypted over the network. As an alternative, Sectigo offers an HTTPS TSA (``https://timestamp.sectigo.com``) but
 applies throttling so is only suitable for low throughput applications.
 
 The European Union maintains a list of trusted TSAs as part of the `eIDAS dashboard
