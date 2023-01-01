@@ -4,3 +4,6 @@ line-length = 120
 profile = "black"
 line_length = 120
 skip_gitignore = true
+[[tool.mypy.overrides]]
+module = "asn1crypto.*"
+ignore_missing_imports = true

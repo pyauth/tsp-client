@@ -24,7 +24,7 @@ class DigestAlgorithm(Enum):
         """
         The hashlib callable that implements the specified algorithm.
         """
-        return digest_algorithm_implementations[self]
+        return digest_algorithm_implementations[self]  # type: ignore
 
 
 digest_algorithm_implementations = {

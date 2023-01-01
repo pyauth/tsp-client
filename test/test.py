@@ -47,7 +47,7 @@ class TestTSPClient(unittest.TestCase):
         with self.assertRaises(DigestMismatchError):
             self.verifier.verify(signed, message=b"")
 
-        with self.assertRaises(DigestMismatchError):
+        with self.assertRaises(InvalidTimeStampToken):
             self.verifier.verify(signed, message_digest=reversed(digest))
 
         with self.assertRaises(NonceMismatchError):

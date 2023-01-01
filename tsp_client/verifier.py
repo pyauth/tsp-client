@@ -28,7 +28,6 @@ is acceptable for the application.
 """
 import logging
 from dataclasses import dataclass
-from datetime import datetime, timedelta
 from typing import Optional, Union
 
 import certifi
@@ -56,9 +55,11 @@ class CMSAttributes(SetOf):
 
 
 class TSPVerifier:
-    ca_pem_file = None
-    ca_path = None
     require_ess_cert_id_v2 = False
+
+    def __init__(self, ca_pem_file: Optional[str] = None, ca_path: Optional[str] = None) -> None:
+        self.ca_pem_file = ca_pem_file
+        self.ca_path = ca_path
 
     def _verify_imprint(self, message_imprint, *, expect_message, expect_message_digest):
         hash_alg = DigestAlgorithm(message_imprint["hash_algorithm"]["algorithm"])
@@ -94,7 +95,7 @@ class TSPVerifier:
         ca_pem_file, ca_path = self.ca_pem_file, self.ca_path
         if ca_pem_file is None and ca_path is None:
             ca_pem_file = certifi.where()
-        store.load_locations(cafile=ca_pem_file, capath=ca_path)
+        store.load_locations(cafile=ca_pem_file, capath=ca_path)  # type: ignore
         return store
 
     def _cert_match(self, *, signing_cert_id: Union[ESSCertID, ESSCertIDv2], x509_cert) -> bool:
