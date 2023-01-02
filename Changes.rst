@@ -1,3 +1,10 @@
+Changes for v0.1.3 (2023-01-01)
+===============================
+
+-  Add py.typed marker
+
+-  Test and documentation improvements
+
 Changes for v0.1.2 (2022-12-31)
 ===============================
 
