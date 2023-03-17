@@ -1,3 +1,10 @@
+Changes for v0.1.4 (2023-03-17)
+===============================
+
+-  Require pyopenssl 20. Fixes #2
+
+-  Use gh to manage releases
+
 Changes for v0.1.3 (2023-01-01)
 ===============================
 
