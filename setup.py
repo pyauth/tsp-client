@@ -5,6 +5,11 @@ from setuptools import find_packages, setup  # type: ignore
 setup(
     name="tsp-client",
     url="https://github.com/pyauth/tsp-client",
+    project_urls={
+        "Documentation": "https://pyauth.github.io/tsp-client/",
+        "Change log": "https://github.com/pyauth/tsp-client/blob/main/Changes.rst",
+        "Issue tracker": "https://github.com/pyauth/tsp-client/issues",
+    },
     license="Apache Software License",
     author="Andrey Kislyuk",
     author_email="kislyuk@gmail.com",
