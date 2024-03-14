@@ -27,10 +27,12 @@ Synopsis
     # Verify a presented timestamp token offline using the original message
     verified = TSPVerifier().verify(signed, message=message)
 
-    # Or verify using the message digest (digest algorithm may vary)
+    # Or sign and verify using the message digest (digest algorithm may vary)
     import hashlib
 
     digest = hashlib.sha512(message).digest()
+    
+    signer.sign(message_digest=digest)
     verified = TSPVerifier().verify(signed, message_digest=digest)
 
     print(verified.tst_info)  # Parsed TSTInfo (CMS SignedData) structure
