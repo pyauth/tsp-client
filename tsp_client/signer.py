@@ -8,7 +8,7 @@ import requests
 from asn1crypto import algos, tsp
 
 from .algorithms import DigestAlgorithm
-from .exceptions import TSPClientSigningError
+from .exceptions import TSPClientSigningError, InvalidInput
 from .verifier import TSPVerifier, VerifyResult
 
 
@@ -34,10 +34,18 @@ class TSPSigner:
         if verify_result.tst_info["gen_time"] > now + self.max_clock_drift:
             raise TSPClientSigningError("Timestamp returned by server is too far in the future")
 
-    def sign(self, message, *, signing_settings: SigningSettings = SigningSettings()) -> bytes:
+    def sign(self, message=None, *, message_digest=None, signing_settings: SigningSettings = SigningSettings()) -> bytes:
+        if message is None and message_digest is None:
+            raise InvalidInput("Expected at least one of message or message_digest to be set")
+        if message is not None and message_digest is not None:
+            raise InvalidInput("Expected only one of message and message_digest to be set")
+
         hasher = signing_settings.digest_algorithm.implementation()
-        hasher.update(message)
-        digest = hasher.digest()
+
+        if message is not None:
+            hasher.update(message)
+            message_digest = hasher.digest()
+
         nonce = int.from_bytes(secrets.token_bytes(), byteorder=sys.byteorder)
         tsp_request = tsp.TimeStampReq(
             {
@@ -45,7 +53,7 @@ class TSPSigner:
                 "message_imprint": tsp.MessageImprint(
                     {
                         "hash_algorithm": algos.DigestAlgorithm({"algorithm": hasher.name}),
-                        "hashed_message": digest,
+                        "hashed_message": message_digest,
                     }
                 ),
                 "cert_req": True,
@@ -62,6 +70,6 @@ class TSPSigner:
                 f'{tsp_response["status"]["fail_info"].native}'
             )
         tst = tsp_response["time_stamp_token"].dump()
-        verify_result = self._verifier.verify(tst, nonce=nonce, message_digest=digest)
+        verify_result = self._verifier.verify(tst, nonce=nonce, message_digest=message_digest)
         self._verify_timestamp(verify_result)
         return tst

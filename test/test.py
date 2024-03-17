@@ -31,13 +31,7 @@ class TestTSPClient(unittest.TestCase):
         self.signer = TSPSigner()
         self.verifier = TSPVerifier()
 
-    def test_basic_tsp_client_operations(self):
-        message = b"abc"
-        signed = self.signer.sign(message)
-        verified = self.verifier.verify(signed, message=message)
-        digest = hashlib.sha512(message).digest()
-        verified = self.verifier.verify(signed, message_digest=digest)
-
+    def check_results(self, verified, signed, message, digest):
         self.assertTrue(verified.tst_info)
         self.assertTrue(verified.signed_attrs)
 
@@ -52,6 +46,25 @@ class TestTSPClient(unittest.TestCase):
 
         with self.assertRaises(NonceMismatchError):
             self.verifier.verify(signed, message_digest=digest, nonce=123)
+
+    def test_basic_tsp_client_operations(self):
+        message = b"abc"
+        digest = hashlib.sha512(message).digest()
+
+        # sign and verify by message
+        signed = self.signer.sign(message)
+        verified_by_message = self.verifier.verify(signed, message=message)
+        self.check_results(verified_by_message, signed, message, digest)
+
+        # verify by digest
+        verified_by_digest = self.verifier.verify(signed, message_digest=digest)
+        self.check_results(verified_by_digest, signed, message, digest)
+
+        # sign and verify by digest only
+        signed_by_digest = self.signer.sign(message_digest=digest)
+        verified_by_digest = self.verifier.verify(signed_by_digest, message_digest=digest)
+        self.check_results(verified_by_digest, signed_by_digest, message, digest)
+
 
     def test_set_custom_tsa(self):
         message = b"abc"
