@@ -35,14 +35,14 @@ class TSPSigner:
             raise TSPClientSigningError("Timestamp returned by server is too far in the future")
 
     def sign(self, message=None, *, message_digest=None, signing_settings: SigningSettings = SigningSettings()) -> bytes:
-        if not message and not message_digest:
+        if message is None and message_digest is None:
             raise InvalidInput("Expected at least one of message or message_digest to be set")
         if message is not None and message_digest is not None:
             raise InvalidInput("Expected only one of message and message_digest to be set")
 
         hasher = signing_settings.digest_algorithm.implementation()
 
-        if message:
+        if message is not None:
             hasher.update(message)
             message_digest = hasher.digest()
 
