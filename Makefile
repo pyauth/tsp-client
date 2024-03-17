@@ -2,6 +2,7 @@ SHELL=/bin/bash
 
 lint:
 	ruff check tsp_client
+	ruff format --check tsp_client
 	mypy --install-types --non-interactive --check-untyped-defs tsp_client
 
 test:
