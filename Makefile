@@ -1,8 +1,8 @@
 SHELL=/bin/bash
 
 lint:
-	flake8
-	mypy --install-types --non-interactive --check-untyped-defs $$(dirname */__init__.py)
+	ruff check tsp_client
+	mypy --install-types --non-interactive --check-untyped-defs tsp_client
 
 test:
 	python ./test/test.py -v
