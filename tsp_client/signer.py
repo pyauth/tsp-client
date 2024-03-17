@@ -34,7 +34,9 @@ class TSPSigner:
         if verify_result.tst_info["gen_time"] > now + self.max_clock_drift:
             raise TSPClientSigningError("Timestamp returned by server is too far in the future")
 
-    def sign(self, message=None, *, message_digest=None, signing_settings: SigningSettings = SigningSettings()) -> bytes:
+    def sign(
+        self, message=None, *, message_digest=None, signing_settings: SigningSettings = SigningSettings()
+    ) -> bytes:
         if message is None and message_digest is None:
             raise InvalidInput("Expected at least one of message or message_digest to be set")
         if message is not None and message_digest is not None:

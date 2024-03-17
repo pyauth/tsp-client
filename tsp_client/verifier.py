@@ -26,6 +26,7 @@ Then, the client application SHOULD check the policy field to
 determine whether or not the policy under which the token was issued
 is acceptable for the application.
 """
+
 import logging
 from dataclasses import dataclass
 from typing import Optional, Union
