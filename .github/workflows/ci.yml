@@ -9,9 +9,9 @@ jobs:
       max-parallel: 8
       matrix:
         os: [ubuntu-18.04, ubuntu-22.04, macos-12]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: actions/setup-python@v4
       with:
         python-version: ${{matrix.python-version}}
@@ -19,11 +19,12 @@ jobs:
     - run: make lint
     - run: make test
     - uses: codecov/codecov-action@v3
-  black:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: psf/black@stable
   isort:
     runs-on: ubuntu-22.04
     steps:
       - uses: isort/isort-action@v1.1.0
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v1
