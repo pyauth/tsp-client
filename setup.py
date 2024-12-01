@@ -19,7 +19,7 @@ setup(
         "write_to": "tsp_client/version.py",
     },
     setup_requires=["setuptools_scm >= 3.4.3"],
-    install_requires=["asn1crypto >= 0.24.0", "requests >= 2.18.4", "pyOpenSSL >= 20.0.0"],
+    install_requires=["asn1crypto >= 1.4.0", "requests >= 2.25.1", "pyOpenSSL >= 21.0.0, < 24"],
     extras_require={
         "tests": [
             "ruff",
@@ -47,6 +47,7 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
 )
