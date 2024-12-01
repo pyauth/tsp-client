@@ -18,7 +18,7 @@ jobs:
     - run: make install
     - run: make lint
     - run: make test
-    - uses: codecov/codecov-action@v3
+    - uses: codecov/codecov-action@v5
   isort:
     runs-on: ubuntu-22.04
     steps:
