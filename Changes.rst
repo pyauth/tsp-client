@@ -1,3 +1,10 @@
+Changes for v0.2.1 (2024-12-01)
+===============================
+
+-  Restrict pyOpenSSL version range to compatible versions
+
+-  Update CI configuration
+
 Changes for v0.2.0 (2024-03-18)
 ===============================
 
